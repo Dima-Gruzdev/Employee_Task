@@ -27,6 +27,3 @@ WORKDIR /app
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 
 COPY . .
-
-
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

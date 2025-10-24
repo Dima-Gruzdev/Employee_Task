@@ -20,9 +20,11 @@ def get_busy_employees():
 
 
 def get_important_tasks_with_suggestions():
+    """Находим задачи, не начатые, но от которых зависят задачи в работе"""
     important_tasks = (
         Task.objects.filter(
-            status=Task.Status.NOT_STARTED, subtasks__status=Task.Status.IN_PROGRESS
+            status=Task.Status.NOT_STARTED,
+            subtasks__status=Task.Status.IN_PROGRESS
         )
         .distinct()
         .select_related("parent_task__assignee")
@@ -31,13 +33,12 @@ def get_important_tasks_with_suggestions():
     if not important_tasks.exists():
         return []
 
-    # Получаем всех активных сотрудников с нагрузкой
     employees = (
         Employee.objects.filter(is_active=True)
         .annotate(
             active_count=Count(
                 "assigned_tasks",
-                filter=Q(assigned_tasks__status__in=["not_started", "in_progress"]),
+                filter=Q(assigned_tasks__status__in=["not_started", "in_progress"])
             )
         )
         .only("id", "full_name")
@@ -49,23 +50,17 @@ def get_important_tasks_with_suggestions():
 
     result = []
     for task in important_tasks:
-        suggestions = []
+        suggestions = list(eligible_dict.values())
 
-        # Исполнитель родительской задачи, если подходит
+        # Если у важной задачи есть родитель и его можно назначить — ставим первым
         if task.parent_task and task.parent_task.assignee_id in eligible_dict:
-            suggestions.append(eligible_dict[task.parent_task.assignee_id])
+            preferred = eligible_dict[task.parent_task.assignee_id]
+            suggestions = [preferred] + [n for n in suggestions if n != preferred]
 
-        # Остальные подходящие сотрудники
-        for name in eligible_dict.values():
-            if name not in suggestions:
-                suggestions.append(name)
-
-        result.append(
-            {
-                "task_title": task.title,
-                "due_date": task.due_date,
-                "suggested_employees": suggestions,
-            }
-        )
+        result.append({
+            "task_title": task.title,
+            "due_date": task.due_date,
+            "suggested_employees": suggestions,
+        })
 
     return result

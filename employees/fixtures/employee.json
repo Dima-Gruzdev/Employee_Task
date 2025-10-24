@@ -1,0 +1,28 @@
+[
+  {
+    "model": "employees.employee",
+    "pk": 1,
+    "fields": {
+      "full_name": "Иванов Иван Иванович",
+      "position": "Разработчик",
+      "email": "ivanov@example.com",
+      "department": "Backend",
+      "is_active": true,
+      "hire_date": "2023-01-15",
+      "workload_capacity": 5
+    }
+  },
+  {
+    "model": "employees.employee",
+    "pk": 2,
+    "fields": {
+      "full_name": "Петров Петр Петрович",
+      "position": "Аналитик",
+      "email": "petrov@example.com",
+      "department": "Продукт",
+      "is_active": true,
+      "hire_date": "2022-11-10",
+      "workload_capacity": 4
+    }
+  }
+]
