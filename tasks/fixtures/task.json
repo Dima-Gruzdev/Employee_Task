@@ -1,0 +1,24 @@
+[
+  {
+    "model": "tasks.task",
+    "pk": 1,
+    "fields": {
+      "title": "Разработать API",
+      "due_date": "2025-12-01",
+      "status": "not_started",
+      "assignee": 1,
+      "parent_task": null
+    }
+  },
+  {
+    "model": "tasks.task",
+    "pk": 2,
+    "fields": {
+      "title": "Написать документацию",
+      "due_date": "2025-12-10",
+      "status": "in_progress",
+      "assignee": 1,
+      "parent_task": 1
+    }
+  }
+]
