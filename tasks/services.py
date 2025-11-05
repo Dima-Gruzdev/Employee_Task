@@ -6,6 +6,14 @@ from .models import Task
 
 
 def get_busy_employees():
+    """Возвращает список активных сотрудников, отсортированный по убыванию количества активных задач.
+
+        Активными считаются задачи со статусом 'not_started' или 'in_progress'.
+        Сотрудники с `is_active=False` исключаются из выборки.
+
+        Returns:
+            QuerySet[Employee]: Список сотрудников с аннотированным полем `active_tasks_count`."""
+
     return (
         Employee.objects.filter(is_active=True)
         .annotate(
